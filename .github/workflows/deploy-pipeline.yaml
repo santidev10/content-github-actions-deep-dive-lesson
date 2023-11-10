@@ -44,3 +44,25 @@ jobs:
         with:
           name: zipped-bundle
           path: ${{ github.sha }}.zip
+
+  documentation:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: create docks folder
+        runs: mkdir docs
+      - name: convert md to html
+        uses: docker://pandoc/core:2.9
+        with:
+          args: userguide.md -t html -0 docs/index.html
+      - name: deploy site
+        uses: JamesIves/github-pages-deploy-action
+        with:
+          folder: docs
+          branch: gh-pages
+    
+
+
+
